@@ -1,5 +1,5 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+export default {
     content: [
         "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
         "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -18,24 +18,10 @@ module.exports = {
                 border: "var(--border)",
             },
             fontFamily: {
-                sans: ["var(--font-geist-sans)", "Inter", "sans-serif"],
-                mono: ["var(--font-geist-mono)", "monospace"],
+                sans: ["Inter", "sans-serif"],
             },
             backgroundImage: {
                 "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-                "mesh-dark": "radial-gradient(circle at 50% -10%, rgba(99, 102, 241, 0.08) 0%, transparent 40%)",
-            },
-            animation: {
-                "shimmer": "shimmer 2s linear infinite",
-                "border-beam": "border-beam 4s ease infinite",
-            },
-            keyframes: {
-                shimmer: {
-                    "100%": { transform: "translateX(100%)" },
-                },
-                "border-beam": {
-                    "100%": { "offset-distance": "100%" },
-                },
             },
         },
     },
