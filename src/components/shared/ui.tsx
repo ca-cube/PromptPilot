@@ -104,3 +104,56 @@ export const Input = ({ className, ...props }: React.InputHTMLAttributes<HTMLInp
         />
     );
 };
+
+export const Textarea = ({ className, ...props }: React.TextareaHTMLAttributes<HTMLTextAreaElement>) => {
+    return (
+        <textarea
+            className={cn(
+                "w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500/50 transition-all placeholder:text-zinc-600 min-h-[120px] resize-none",
+                className
+            )}
+            {...props}
+        />
+    );
+};
+
+export interface ModalProps {
+    isOpen: boolean;
+    onClose: () => void;
+    children: React.ReactNode;
+    title?: string;
+}
+
+export const Modal = ({ isOpen, onClose, children, title }: ModalProps) => {
+    if (!isOpen) return null;
+
+    return (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={onClose}
+                className="absolute inset-0 bg-black/60 backdrop-blur-md"
+            />
+            <motion.div
+                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                className="relative w-full max-w-2xl bg-zinc-950 border border-white/10 rounded-[2rem] shadow-[0_0_100px_rgba(0,0,0,0.5)] overflow-hidden"
+            >
+                {title && (
+                    <div className="px-8 py-6 border-b border-white/5 flex items-center justify-between">
+                        <h3 className="text-xl font-bold tracking-tight">{title}</h3>
+                        <button onClick={onClose} className="text-zinc-500 hover:text-white transition-colors">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M15 5L5 15M5 5L15 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                        </button>
+                    </div>
+                )}
+                <div className="p-8">{children}</div>
+            </motion.div>
+        </div>
+    );
+};

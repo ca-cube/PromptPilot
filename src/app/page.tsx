@@ -1,11 +1,12 @@
-"use client";
-
-import { motion } from "framer-motion";
 import { Zap, Shield, Target, TrendingUp, ArrowRight, CheckCircle, Globe, Cpu, ChevronRight, Activity, Sparkles, Box } from "lucide-react";
 import Link from "next/link";
-import { Button, Card, Badge } from "@/components/shared/ui";
+import { Button, Card, Badge, Modal } from "@/components/shared/ui";
+import { useState } from "react";
+import { PromptConsole } from "@/components/PromptConsole";
 
 export default function LandingPage() {
+    const [isPromptOpen, setIsPromptOpen] = useState(false);
+
     return (
         <div className="min-h-screen bg-background overflow-hidden selection:bg-indigo-500/30">
             {/* Ambient Background Elements */}
