@@ -13,7 +13,7 @@
   "dependencies": {
     "@ai-sdk/google": "^3.0.30",
     "@ai-sdk/openai": "^3.0.31",
-    "ai": "^6.0.97",
+    "ai": "^3.4.1",
     "axios": "^1.6.0",
     "clsx": "^2.1.1",
     "framer-motion": "^11.0.0",

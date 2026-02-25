@@ -21,7 +21,7 @@ export type AnalysisResult = z.infer<typeof AnalysisSchema>;
 
 export async function analyzePrompt(prompt: string, context?: string): Promise<AnalysisResult> {
     const { object } = await generateObject({
-        model: google("gemini-1.5-pro-latest"),
+        model: google("gemini-1.5-pro-latest") as any,
         schema: AnalysisSchema,
         system: "You are a Prompt Engineering Expert. Analyze the user's prompt for enterprise readiness. Evaluate Role, Context, Constraints, Format, and Goal. Provide suggestions and risk analysis.",
         prompt: `User Prompt: ${prompt}\nBusiness Context: ${context || "None provided"}`,
@@ -32,7 +32,7 @@ export async function analyzePrompt(prompt: string, context?: string): Promise<A
 
 export async function optimizePrompt(prompt: string, analysis: AnalysisResult, context?: string): Promise<string> {
     const { text } = await generateText({
-        model: google("gemini-1.5-pro-latest"),
+        model: google("gemini-1.5-pro-latest") as any,
         system: "You are an expert Prompt Engineer. Rewrite the user's prompt to be 'enterprise-ready' using the provided analysis. Ensure the optimized prompt includes a clear Persona, Context, Constraints, and Output Format. Keep it concise yet powerful.",
         prompt: `Original Prompt: ${prompt}\nMissing Components: ${analysis.missing_components.join(", ")}\nContext: ${context || "None"}\nGoal: ${analysis.intent}`,
     });
@@ -41,7 +41,7 @@ export async function optimizePrompt(prompt: string, analysis: AnalysisResult, c
 }
 export async function runAgent(prompt: string, context?: string) {
     const { text, toolCalls, toolResults } = await generateText({
-        model: google("gemini-1.5-pro-latest"),
+        model: google("gemini-1.5-pro-latest") as any,
         system: `You are PromptPilot Intelligence, your friendly enterprise prompt consultant. 
         Your mission is to help the user craft the most effective prompts possible through a multi-step strategic process.
         
@@ -72,7 +72,7 @@ export async function runAgent(prompt: string, context?: string) {
                 }),
                 execute: async ({ prompt, persona }) => {
                     const { text } = await generateText({
-                        model: google("gemini-1.5-flash-latest"),
+                        model: google("gemini-1.5-flash-latest") as any,
                         system: `Simulate being a ${persona}. How would you respond to this prompt?`,
                         prompt,
                     });
