@@ -140,10 +140,10 @@ export const Modal = ({ isOpen, onClose, children, title }: ModalProps) => {
                 initial={{ opacity: 0, scale: 0.95, y: 20 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                className="relative w-full max-w-2xl bg-zinc-950 border border-white/10 rounded-[2rem] shadow-[0_0_100px_rgba(0,0,0,0.5)] overflow-hidden"
+                className="relative w-full max-w-2xl bg-zinc-950 border border-white/10 rounded-[2rem] shadow-[0_0_100px_rgba(0,0,0,0.5)] overflow-hidden flex flex-col max-h-[90vh]"
             >
                 {title && (
-                    <div className="px-8 py-6 border-b border-white/5 flex items-center justify-between">
+                    <div className="px-8 py-6 border-b border-white/5 flex items-center justify-between shrink-0">
                         <h3 className="text-xl font-bold tracking-tight">{title}</h3>
                         <button onClick={onClose} className="text-zinc-500 hover:text-white transition-colors">
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -152,7 +152,7 @@ export const Modal = ({ isOpen, onClose, children, title }: ModalProps) => {
                         </button>
                     </div>
                 )}
-                <div className="p-8">{children}</div>
+                <div className="p-8 overflow-y-auto custom-scrollbar">{children}</div>
             </motion.div>
         </div>
     );

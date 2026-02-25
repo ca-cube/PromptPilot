@@ -103,45 +103,55 @@ export function PromptConsole() {
                                 </div>
                             </div>
 
-                            <div className="prose prose-invert max-w-none mb-8">
-                                <p className="text-zinc-300 text-sm leading-relaxed whitespace-pre-wrap">
-                                    {result.text}
-                                </p>
+                            <div className="space-y-8">
+                                {result.text && (
+                                    <div className="prose prose-invert max-w-none">
+                                        <div className="text-zinc-300 text-sm leading-relaxed whitespace-pre-wrap bg-white/[0.02] p-6 rounded-2xl border border-white/5">
+                                            {result.text}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {result.toolResults && result.toolResults.length > 0 ? (
+                                    result.toolResults.map((tr: any, idx: number) => (
+                                        <div key={idx} className="space-y-4">
+                                            {tr.toolName === 'optimize_prompt' && (
+                                                <div className="space-y-4 pt-6 border-t border-white/5">
+                                                    <div className="flex items-center gap-2 text-emerald-400">
+                                                        <Target size={16} />
+                                                        <span className="font-bold uppercase tracking-wider text-[10px]">Strategically Optimized Prompt</span>
+                                                    </div>
+                                                    <div className="p-6 rounded-2xl bg-black border border-white/10 font-mono text-xs text-zinc-400 leading-relaxed group relative">
+                                                        <button
+                                                            onClick={() => navigator.clipboard.writeText(tr.result)}
+                                                            className="absolute top-4 right-4 text-[10px] uppercase tracking-widest font-black text-zinc-400 hover:text-white transition-colors bg-white/5 px-2 py-1 rounded"
+                                                        >
+                                                            Copy Prompt
+                                                        </button>
+                                                        {tr.result}
+                                                    </div>
+                                                </div>
+                                            )}
+
+                                            {tr.toolName === 'simulate_execution' && (
+                                                <div className="p-6 rounded-2xl bg-indigo-500/[0.02] border border-indigo-500/10">
+                                                    <div className="flex items-center gap-2 text-indigo-400 mb-3">
+                                                        <Activity size={16} />
+                                                        <span className="font-bold uppercase tracking-wider text-[10px]">Execution Simulation Result</span>
+                                                    </div>
+                                                    <p className="text-xs text-zinc-400 italic leading-relaxed">
+                                                        {tr.result.simulation}
+                                                    </p>
+                                                </div>
+                                            )}
+                                        </div>
+                                    ))
+                                ) : (
+                                    <div className="p-6 rounded-2xl border border-dashed border-white/10 text-center">
+                                        <p className="text-xs text-zinc-500 uppercase tracking-widest font-bold">No external tools were required for this analysis</p>
+                                    </div>
+                                )}
                             </div>
-
-                            {result.toolResults && result.toolResults.map((tr: any, idx: number) => (
-                                tr.toolName === 'optimize_prompt' && (
-                                    <div key={idx} className="space-y-4 pt-6 border-t border-white/5">
-                                        <div className="flex items-center gap-2 text-emerald-400">
-                                            <Target size={16} />
-                                            <span className="font-bold uppercase tracking-wider text-[10px]">Strategically Optimized Prompt</span>
-                                        </div>
-                                        <div className="p-6 rounded-2xl bg-black border border-white/5 font-mono text-xs text-zinc-400 leading-relaxed group relative">
-                                            <button
-                                                onClick={() => navigator.clipboard.writeText(tr.result)}
-                                                className="absolute top-4 right-4 text-[10px] uppercase tracking-widest font-black text-zinc-600 hover:text-white transition-colors"
-                                            >
-                                                Copy
-                                            </button>
-                                            {tr.result}
-                                        </div>
-                                    </div>
-                                )
-                            ))}
-
-                            {result.toolResults && result.toolResults.map((tr: any, idx: number) => (
-                                tr.toolName === 'simulate_execution' && (
-                                    <div key={idx} className="mt-6 p-4 rounded-xl bg-white/[0.02] border border-white/5">
-                                        <div className="flex items-center gap-2 text-amber-400 mb-2">
-                                            <Activity size={16} />
-                                            <span className="font-bold uppercase tracking-wider text-[10px]">Execution Simulation Result</span>
-                                        </div>
-                                        <p className="text-[11px] text-zinc-500 italic leading-relaxed">
-                                            {tr.result.simulation}
-                                        </p>
-                                    </div>
-                                )
-                            ))}
                         </Card>
                     </motion.div>
                 )}
