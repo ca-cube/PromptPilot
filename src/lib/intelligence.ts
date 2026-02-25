@@ -42,19 +42,10 @@ export async function optimizePrompt(prompt: string, analysis: AnalysisResult, c
 export async function runAgent(prompt: string, context?: string) {
     const { text, toolCalls, toolResults } = await generateText({
         model: google("gemini-1.5-pro-latest") as any,
-        system: `You are PromptPilot Intelligence, your friendly enterprise prompt consultant. 
-        Your mission is to help the user craft the most effective prompts possible through a multi-step agentic process.
-        
-        ### OPERATIONAL PROTOCOL:
-        1. **ANALYSIS**: Begin by greeting the user and acknowledging their intent.
-        2. **STRATEGY (MANDATORY)**: You MUST call the 'optimize_prompt' tool for every user request to generate a high-quality, enterprise-ready version of their prompt.
-        3. **SIMULATION (MANDATORY)**: After optimization, you MUST call 'simulate_execution' to demonstrate the expected output.
-        4. **REPORT**: Once you have the results, provide a final response that:
-           - Summarizes why the optimization was necessary.
-           - Highlights the key improvements made (Persona, Context, Constraints).
-           - Briefly explains the simulation outcome.
-        
-        Always maintain a premium, intelligent, and supportive tone. Ensure your final response text acts as a 'wrapper' or 'report' for the tool results that will be displayed below it.`,
+        system: `You are PromptPilot Intelligence. 
+        MANDATORY: You must call 'optimize_prompt' to improve the user's input.
+        MANDATORY: You must call 'simulate_execution' thereafter.
+        TONE: Premium, Intelligent.`,
         prompt: `User Prompt: ${prompt}\nContext: ${context || "None"}`,
         tools: {
             optimize_prompt: tool({
@@ -63,29 +54,30 @@ export async function runAgent(prompt: string, context?: string) {
                     originalPrompt: z.string().describe("The original prompt to optimize"),
                     reasoning: z.string().describe("Why this optimization is needed"),
                 }),
-                execute: async ({ originalPrompt }) => {
+                execute: async ({ originalPrompt }: { originalPrompt: string }) => {
                     const analysis = await analyzePrompt(originalPrompt);
                     return optimizePrompt(originalPrompt, analysis);
                 }
-            }),
+            }) as any,
             simulate_execution: tool({
                 description: "Simulates how an LLM would react to this prompt.",
                 parameters: z.object({
                     prompt: z.string().describe("The prompt to simulate"),
                     persona: z.string().describe("The persona of the LLM to simulate"),
                 }),
-                execute: async ({ prompt, persona }) => {
+                execute: async ({ prompt, persona }: { prompt: string; persona: string }) => {
                     const { text } = await generateText({
                         model: google("gemini-1.5-flash-latest") as any,
-                        system: `Simulate being a ${persona}. How would you respond to this prompt?`,
+                        system: `Simulate being a ${persona}`,
                         prompt,
                     });
                     return { simulation: text, status: "success" };
                 }
-            })
+            }) as any
         },
+        toolChoice: "required",
         maxSteps: 5,
-    });
+    } as any);
 
     return { text, toolCalls, toolResults };
 }

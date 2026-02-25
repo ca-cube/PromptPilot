@@ -9,6 +9,7 @@ export async function POST(req: Request) {
         }
 
         const result = await runAgent(prompt, context);
+        console.log("AGENT DEBUG - Result:", JSON.stringify(result, null, 2));
         return NextResponse.json(result);
     } catch (error: any) {
         console.error("Agent Error:", error);
