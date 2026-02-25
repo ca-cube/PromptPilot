@@ -56,7 +56,8 @@ export async function runAgent(prompt: string, context?: string) {
                 }),
                 execute: async ({ originalPrompt }: { originalPrompt: string }) => {
                     const analysis = await analyzePrompt(originalPrompt);
-                    return optimizePrompt(originalPrompt, analysis);
+                    const optimized = await optimizePrompt(originalPrompt, analysis);
+                    return { optimized, analysis };
                 }
             }) as any,
             simulate_execution: tool({
