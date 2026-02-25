@@ -1,3 +1,6 @@
+"use client";
+
+import { motion } from "framer-motion";
 import { Zap, Shield, Target, TrendingUp, ArrowRight, CheckCircle, Globe, Cpu, ChevronRight, Activity, Sparkles, Box } from "lucide-react";
 import Link from "next/link";
 import { Button, Card, Badge, Modal } from "@/components/shared/ui";
@@ -70,11 +73,14 @@ export default function LandingPage() {
                             </p>
 
                             <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-                                <Link href="/dashboard" className="w-full sm:w-auto">
-                                    <Button variant="accent" size="lg" className="h-16 px-10 rounded-2xl text-lg group">
-                                        Get Started Free <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
-                                    </Button>
-                                </Link>
+                                <Button
+                                    variant="accent"
+                                    size="lg"
+                                    className="h-16 px-10 rounded-2xl text-lg group"
+                                    onClick={() => setIsPromptOpen(true)}
+                                >
+                                    Get Started Free <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                                </Button>
                                 <Button variant="secondary" size="lg" className="h-16 px-10 rounded-2xl text-lg">
                                     Explore Documentation
                                 </Button>
@@ -221,6 +227,14 @@ export default function LandingPage() {
                     </div>
                 </div>
             </footer>
+
+            <Modal
+                isOpen={isPromptOpen}
+                onClose={() => setIsPromptOpen(false)}
+                title="PromptPilot Intelligence Console"
+            >
+                <PromptConsole />
+            </Modal>
         </div>
     );
 }

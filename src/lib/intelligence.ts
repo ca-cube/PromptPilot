@@ -1,4 +1,4 @@
-import { generateObject, generateText } from "ai";
+import { generateObject, generateText, tool } from "ai";
 import { openai } from "@ai-sdk/openai";
 import { google } from "@ai-sdk/google";
 import { z } from "zod";
@@ -42,33 +42,33 @@ export async function optimizePrompt(prompt: string, analysis: AnalysisResult, c
 export async function runAgent(prompt: string, context?: string) {
     const { text, toolCalls, toolResults } = await generateText({
         model: google("gemini-1.5-pro-latest"),
-        system: `You are the PromptPilot Core Intelligence. 
-        Your goal is to process user prompts using an agentic approach. 
-        1. First, analyze the intent.
-        2. Use the 'optimize_prompt' tool if the prompt is weak.
-        3. Use the 'simulate_execution' tool to predict the outcome.
-        4. Provide a final reasoned response with the optimized prompt and the simulation result.
+        system: `You are PromptPilot Intelligence, your friendly enterprise prompt consultant. 
+        Your mission is to help the user craft the most effective prompts possible through a multi-step strategic process.
         
-        Always be professional, concise, and focused on enterprise value.`,
+        1. **Listen & Understand**: First, acknowledge the user's intent with a friendly greeting.
+        2. **Strategize**: Use the 'optimize_prompt' tool if you notice any missing enterprise components (Persona, Context, Constraints).
+        3. **Simulate**: Use the 'simulate_execution' tool to show the user how an LLM would actually 'feel' their prompt.
+        4. **Deliver**: Present the final optimized prompt and your insights in a supportive, encouraging, and highly professional manner.
+        
+        Always use a tone that is premium, intelligent, yet approachable. Keep your response structured and visually clean.`,
         prompt: `User Prompt: ${prompt}\nContext: ${context || "None"}`,
         tools: {
-            optimize_prompt: {
+            optimize_prompt: tool({
                 description: "Optimizes a prompt for better AI performance.",
                 parameters: z.object({
-                    originalPrompt: z.string(),
-                    reasoning: z.string().description("Why this optimization is needed"),
+                    originalPrompt: z.string().describe("The original prompt to optimize"),
+                    reasoning: z.string().describe("Why this optimization is needed"),
                 }),
-                execute: async ({ originalPrompt, reasoning }) => {
-                    // In a real agent, this might call another service or model
+                execute: async ({ originalPrompt }) => {
                     const analysis = await analyzePrompt(originalPrompt);
                     return optimizePrompt(originalPrompt, analysis);
                 }
-            },
-            simulate_execution: {
+            }),
+            simulate_execution: tool({
                 description: "Simulates how an LLM would react to this prompt.",
                 parameters: z.object({
-                    prompt: z.string(),
-                    persona: z.string().description("The persona of the LLM to simulate"),
+                    prompt: z.string().describe("The prompt to simulate"),
+                    persona: z.string().describe("The persona of the LLM to simulate"),
                 }),
                 execute: async ({ prompt, persona }) => {
                     const { text } = await generateText({
@@ -78,9 +78,9 @@ export async function runAgent(prompt: string, context?: string) {
                     });
                     return { simulation: text, status: "success" };
                 }
-            }
+            })
         },
-        maxSteps: 5, // Allow the agent to deliberate
+        maxSteps: 5,
     });
 
     return { text, toolCalls, toolResults };
