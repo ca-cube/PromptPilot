@@ -239,7 +239,13 @@ export default function LandingPage() {
     );
 }
 
-const FeatureItem = ({ icon, title, description }: any) => (
+interface FeatureItemProps {
+    icon: React.ReactNode;
+    title: string;
+    description: string;
+}
+
+const FeatureItem = ({ icon, title, description }: FeatureItemProps) => (
     <Card className="p-10 space-y-6 group" glass>
         <div className="w-14 h-14 rounded-2xl bg-white/[0.02] border border-white/[0.05] flex items-center justify-center text-2xl group-hover:scale-110 group-hover:border-indigo-500/30 transition-all duration-500 shadow-xl group-hover:shadow-indigo-500/10">
             {icon}
@@ -251,7 +257,12 @@ const FeatureItem = ({ icon, title, description }: any) => (
     </Card>
 );
 
-const FooterColumn = ({ title, links }: any) => (
+interface FooterColumnProps {
+    title: string;
+    links: string[];
+}
+
+const FooterColumn = ({ title, links }: FooterColumnProps) => (
     <div className="space-y-8">
         <h4 className="text-[10px] font-black text-white uppercase tracking-[0.3em]">{title}</h4>
         <ul className="space-y-4">
@@ -261,3 +272,4 @@ const FooterColumn = ({ title, links }: any) => (
         </ul>
     </div>
 );
+

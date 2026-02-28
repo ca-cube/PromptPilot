@@ -290,7 +290,16 @@ export default function DashboardPage() {
     );
 }
 
-const StatCard = ({ title, value, change, trend, icon, delay }: any) => (
+interface StatCardProps {
+    title: string;
+    value: string;
+    change: string;
+    trend: 'up' | 'down';
+    icon: React.ReactNode;
+    delay: number;
+}
+
+const StatCard = ({ title, value, change, trend, icon, delay }: StatCardProps) => (
     <Card className="p-6 space-y-4" glass>
         <div className="flex justify-between items-center">
             <span className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">{title}</span>
@@ -316,7 +325,17 @@ const StatCard = ({ title, value, change, trend, icon, delay }: any) => (
     </Card>
 );
 
-const ActivityRow = ({ user, action, score, time, category, status, isHighRisk }: any) => (
+interface ActivityRowProps {
+    user: string;
+    action: string;
+    score: number;
+    time: string;
+    category: string;
+    status: string;
+    isHighRisk?: boolean;
+}
+
+const ActivityRow = ({ user, action, score, time, category, status, isHighRisk }: ActivityRowProps) => (
     <tr className="group hover:bg-white/[0.02] transition-colors cursor-pointer">
         <td className="px-8 py-5">
             <div className="flex items-center gap-4">
@@ -347,3 +366,4 @@ const ActivityRow = ({ user, action, score, time, category, status, isHighRisk }
         </td>
     </tr>
 );
+

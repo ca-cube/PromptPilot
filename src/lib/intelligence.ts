@@ -21,7 +21,7 @@ export type AnalysisResult = z.infer<typeof AnalysisSchema>;
 
 export async function analyzePrompt(prompt: string, context?: string): Promise<AnalysisResult> {
     const { object } = await generateObject({
-        model: google("gemini-1.5-pro-latest") as any,
+        model: google("gemini-1.5-pro-latest"),
         schema: AnalysisSchema,
         system: "You are a Prompt Engineering Expert. Analyze the user's prompt for enterprise readiness. Evaluate Role, Context, Constraints, Format, and Goal. Provide suggestions and risk analysis.",
         prompt: `User Prompt: ${prompt}\nBusiness Context: ${context || "None provided"}`,
@@ -32,7 +32,7 @@ export async function analyzePrompt(prompt: string, context?: string): Promise<A
 
 export async function optimizePrompt(prompt: string, analysis: AnalysisResult, context?: string): Promise<string> {
     const { text } = await generateText({
-        model: google("gemini-1.5-pro-latest") as any,
+        model: google("gemini-1.5-pro-latest"),
         system: "You are an expert Prompt Engineer. Rewrite the user's prompt to be 'enterprise-ready' using the provided analysis. Ensure the optimized prompt includes a clear Persona, Context, Constraints, and Output Format. Keep it concise yet powerful.",
         prompt: `Original Prompt: ${prompt}\nMissing Components: ${analysis.missing_components.join(", ")}\nContext: ${context || "None"}\nGoal: ${analysis.intent}`,
     });
@@ -40,7 +40,7 @@ export async function optimizePrompt(prompt: string, analysis: AnalysisResult, c
     return text;
 }
 export async function runAgent(prompt: string, context?: string) {
-    const { text, toolCalls, toolResults } = await generateText({
+    const { text, toolResults } = await generateText({
         model: google("gemini-1.5-pro-latest") as any,
         system: `You are PromptPilot Intelligence. 
         MANDATORY: You must call 'optimize_prompt' to improve the user's input.
@@ -59,7 +59,7 @@ export async function runAgent(prompt: string, context?: string) {
                     const optimized = await optimizePrompt(originalPrompt, analysis);
                     return { optimized, analysis };
                 }
-            }) as any,
+            }),
             simulate_execution: tool({
                 description: "Simulates how an LLM would react to this prompt.",
                 parameters: z.object({
@@ -74,11 +74,13 @@ export async function runAgent(prompt: string, context?: string) {
                     });
                     return { simulation: text, status: "success" };
                 }
-            }) as any
-        },
+            })
+        } as any,
         toolChoice: "required",
         maxSteps: 5,
     } as any);
 
-    return { text, toolCalls, toolResults };
+    return { text, toolResults };
 }
+
+
